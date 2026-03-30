@@ -1,1 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
 @import "tailwindcss";
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --color-base: #f9f9f9;
+  --color-primary: #242edb;
+
+  --color-coral-100: #ebebeb;
+  --color-coral-200: #e0e0e0;
+  --color-coral-300: #6C6C6C;
+}
+
+@layer base {
+  html body #root {
+    @apply p-0 m-0 font-inter bg-base w-full h-screen;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply text-white bg-primary font-semibold text-lg p-4 rounded-xl border border-[#367AFF] cursor-pointer;
+  }
+
+  .divider {
+    @apply flex flex-row gap-2.5 text-coral-100 items-center w-full before:content-[''] before:bg-coral-100 before:grow before:w-full before:h-[0.125rem] after:content-[''] after:bg-coral-100 after:grow after:w-full after:h-[0.125rem];
+  }
+}
