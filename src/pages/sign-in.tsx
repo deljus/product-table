@@ -6,6 +6,11 @@ import { Checkbox } from "@/components/form-fields/checkbox";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useMutation } from "@tanstack/react-query";
+import { auth } from "@/libs/services";
+import * as TokenStorage from "@/libs/token-storage";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const validateSchema = yup
   .object({
@@ -15,23 +20,33 @@ const validateSchema = yup
   })
   .required();
 
-type FormFields = yup.InferType<typeof validateSchema>;
-
 export function SignInPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm({
+  const navigate = useNavigate();
+
+  const form = useForm({
     resolver: yupResolver(validateSchema),
   });
-  const onSubmit = (data: FormFields) => console.log(data);
+
+  const authMutation = useMutation({
+    mutationFn: auth.login,
+    onSuccess: (response) => {
+      TokenStorage.clear();
+      const { accessToken, refreshToken } = response.data;
+      const { rememberMe } = form.getValues();
+      TokenStorage.set({ accessToken, refreshToken, isSesson: !rememberMe });
+      navigate("/");
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const { errors } = form.formState;
 
   return (
-    <div className="container h-full flex items-center justify-center w-full">
+    <div className="h-full flex items-center justify-center w-full">
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(({ username, password }) =>
+          authMutation.mutate({ username, password }),
+        )}
         className="max-w-[515px] border-[6px] border-white bg-base w-full rounded-[40px] 
                    bg-gradient-to-b from-[#232323/.3] to-white p-12
                    shadow-[0px_24px_32px_0px_rgba(0,_0,_0,_0.04)]"
@@ -45,23 +60,27 @@ export function SignInPage() {
         </h2>
         <label>Логин</label>
         <UserField
-          {...register("username")}
-          error={errors.username?.message}
-          onClear={() => setValue("username", "")}
+          {...form.register("username")}
+          error={errors?.username?.message}
+          onClear={() => form.setValue("username", "")}
         />
         <label>Пароль</label>
         <PasswordField
-          {...register("password")}
+          {...form.register("password")}
           error={errors.password?.message}
         />
 
         <Checkbox
           label="запомнить меня"
           className="mb-5"
-          {...register("rememberMe")}
+          {...form.register("rememberMe")}
         />
 
-        <button type="submit" className="btn w-full mb-4">
+        <button
+          type="submit"
+          className="btn w-full mb-4"
+          disabled={authMutation.isPending}
+        >
           Войти
         </button>
 
@@ -70,7 +89,7 @@ export function SignInPage() {
         <div className="text-center text-lg text-coral-300">
           <span>Нет аккаунта? </span>
           <Link
-            to="create-account"
+            to="/create-account"
             className="text-primary cursor-pointer font-semibold underline"
           >
             Создать
