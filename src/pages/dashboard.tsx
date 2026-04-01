@@ -1,5 +1,6 @@
 import { SearchInput } from "@/components/search-input";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import cn from "classnames";
 import { useQuery } from "@tanstack/react-query";
 import { productsService } from "@/libs/services";
 import { Checkbox } from "@/components/form-fields/checkbox";
@@ -11,7 +12,7 @@ import PlusCircleIcon from "@/assets/plus-circle.svg?react";
 import ArrowPathIcon from "@/assets/arrow-path.svg?react";
 import { useNavigate } from "react-router-dom";
 import type { Product } from "@/types";
-import type { Column } from "@/components/table";
+import type { Column, OrderField } from "@/components/table";
 
 type Filters = {
   search?: string;
@@ -41,26 +42,36 @@ const columns: Column<Product>[] = [
   {
     title: "Вендор",
     dataKey: "brand",
+    render: ({ brand }) => brand,
   },
   {
     title: "Артикул",
     dataKey: "sku",
+    render: ({ sku }) => sku,
   },
   {
     title: "Оценка",
-    dataKey: "rating",
+    render: ({ rating }) => (
+      <div>
+        <span className={cn(rating < 3.5 && "text-red-500")}>
+          {rating.toFixed(1)}
+        </span>{" "}
+        / 5
+      </div>
+    ),
   },
   {
     title: "Цена, ₽",
     dataKey: "price",
     sortable: true,
+    render: ({ price }) => price,
   },
   {
     title: "",
     render: () => (
       <div className="flex items-center space-x-2">
-        <button type="button" className="btn rounded-2xl py-0 px-2">
-          <PlusIcon className="w-5 h-5" />
+        <button type="button" className="btn btn-primary rounded-2xl py-0 px-2">
+          <PlusIcon className="w-5 h-5 " />
         </button>
         <button type="button">
           <ElipsisIcon className="w-5 h-5" />
@@ -81,19 +92,19 @@ export function DashboardPage() {
   const productQuery = useQuery({
     queryKey: [filters],
     queryFn: () => productsService.get(filters),
-    placeholderData: (prev) => {
-      console.log(prev);
-      return prev;
-    },
+    placeholderData: (prev) => prev,
   });
 
   const handleSearch = (search: string) => setFilters({ ...filters, search });
 
-  const handleOrder = (field: string, order: "asc" | "desc") => {
+  const handleOrder = ({ field, order }: OrderField<Product>) => {
     setFilters({ ...filters, sortBy: field, order });
   };
 
-  const handlePginate = (skip: number) => setFilters({ ...filters, skip });
+  const handlePginate = useCallback(
+    (skip: number) => setFilters((prev) => ({ ...prev, skip })),
+    [],
+  );
 
   const { products, skip, total } = productQuery.data?.data || {};
 
@@ -131,7 +142,6 @@ export function DashboardPage() {
           columns={columns}
           onOrder={handleOrder}
           isLoading={productQuery.isFetching}
-          sortedKey={filters.sortBy}
           order={filters.order}
         />
 

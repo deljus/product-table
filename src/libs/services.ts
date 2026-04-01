@@ -1,5 +1,5 @@
 import { clientApi } from "@/libs/api";
-import type { User, Product } from '@/types'
+import type { User, Product } from "@/types";
 
 const expiresInMins = Number(import.meta.env.VITE_TOKEN_EXPIRED);
 
@@ -28,15 +28,20 @@ type ProductDTO = {
 };
 
 type ProductResponce = {
-    products: Product[],
-    total: number, 
-    skip: number, 
-    limit: number
-}
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
+};
 
 export const productsService = {
   get: ({ search, ...rest }: ProductDTO) => {
-    const params = new URLSearchParams(rest);
+    const clearParams = Object.fromEntries(
+      Object.entries(rest)
+        .filter((s) => s[1] != null)
+        .map(([k, v]) => [k, String(v)]),
+    );
+    const params = new URLSearchParams(clearParams);
 
     const url = search
       ? `/product/search?q=${search}&${params.toString()}`

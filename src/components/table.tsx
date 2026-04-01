@@ -1,29 +1,26 @@
 import { useId } from "react";
 import cn from "classnames";
 import InboxIcon from "@/assets/inbox.svg?react";
-import ArrowDownIcon from "@/assets/arrow-down.svg?react";
+import { OrderBtn } from "@/components/order-btn";
 import type { ReactNode } from "react";
-
-type ColumnText<Data> = {
-  title: string;
-  dataKey: keyof Data;
-  sortable?: boolean;
-};
 
 type ColumnComponent<Data> = {
   title: string | ReactNode;
+  dataKey?: keyof Data;
+  sortable?: boolean;
   render: (item: Data) => ReactNode;
 };
 
-export type Column<Data> = ColumnText<Data> | ColumnComponent<Data>;
+export type Column<Data> = ColumnComponent<Data>;
+
+export type OrderField<Data> = { order?: "asc" | "desc"; field?: keyof Data };
 
 export type Props<Data> = {
   data?: Data[];
   columns: Array<Column<Data>>;
-  sortedKey?: string;
   order?: "asc" | "desc";
   isLoading?: boolean;
-  onOrder: (field: keyof Data, order: "asc" | "desc") => void;
+  onOrder: (item: OrderField<Data>) => void;
   className?: string;
 };
 
@@ -40,9 +37,7 @@ export function TableBody<Data>({
           <tr key={`${uid}-${index}`} className="border-b border-b-gray-200">
             {columns.map((column, colIndex) => (
               <td key={`${uid}-${index}-${colIndex}`} className=" p-2">
-                {"dataKey" in column
-                  ? (item[column.dataKey] as string)
-                  : column.render(item)}
+                {column.render(item)}
               </td>
             ))}
           </tr>
@@ -68,10 +63,10 @@ export function Table<Data extends object>({
   isLoading,
   className,
   data,
-  sortedKey,
   order,
 }: Props<Data>) {
   const uid = useId();
+
 
   return (
     <div className="relative flex w-full h-full">
@@ -88,26 +83,13 @@ export function Table<Data extends object>({
               <th key={`${uid}-${index}`} className="px-2 py-4">
                 <div className="flex flex-row space-x-4">
                   <div>{column.title}</div>
-                  {"dataKey" in column && column.sortable ? (
-                    <button
-                      type="button"
-                      className="cursor-pointer p-1 border border-gray-300 rounded"
-                      onClick={() =>
-                        onOrder(
-                          column.dataKey,
-                          order === "asc" ? "desc" : "asc",
-                        )
+                  {column.sortable ? (
+                    <OrderBtn
+                      order={order}
+                      onClick={(order) =>
+                        onOrder({ order, field: column.dataKey })
                       }
-                    >
-                      <ArrowDownIcon
-                        className={cn(
-                          "w-4 h-4",
-                          sortedKey === column.dataKey && order === "asc"
-                            ? "rotate-180"
-                            : "rotate-0",
-                        )}
-                      />
-                    </button>
+                    />
                   ) : null}
                 </div>
               </th>

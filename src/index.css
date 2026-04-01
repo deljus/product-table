@@ -11,19 +11,17 @@
   --color-coral-200: #e0e0e0;
   --color-coral-300: #6c6c6c;
 
+  --color-primary: #242edb;
+  --color-primary-content: #367aff;
 
-  --color-primary:  #242EDB;
-  --color-primary-content: #367AFF;
+  --color-gray-100: #ebebeb;
+  --color-gray-200: #e0e0e0;
+  --color-gray-300: #c9c9c9;
+  --color-gray-400: #cacaca;
+  --color-gray-500: #9c9c9c;
+  --color-gray-600: #6c6c6c;
 
-  --color-gray-100: #EBEBEB;
-  --color-gray-200: #E0E0E0;
-  --color-gray-300: #C9C9C9;
-  --color-gray-400: #CACACA;
-  --color-gray-500: #9C9C9C;
-  --color-gray-600: #6C6C6C;
-
-  --color-dark-blue: #3C538E;
-
+  --color-dark-blue: #3c538e;
 }
 
 @layer base {
@@ -34,7 +32,7 @@
 
 @layer components {
   .btn {
-    @apply font-inter border cursor-pointer p-2.5 border-gray-200 rounded-lg text-black font-semibold;
+    @apply font-inter border cursor-pointer p-2.5 border-gray-200 rounded-lg text-black font-semibold disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   .btn-primary {
