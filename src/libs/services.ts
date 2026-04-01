@@ -21,13 +21,20 @@ export const auth = {
 
 type ProductDTO = {
   search?: string;
-  limit?: string;
-  skip?: string;
+  limit?: number;
+  skip?: number;
   sortBy?: string;
   order?: "asc" | "desc";
 };
 
-export const products = {
+type ProductResponce = {
+    products: Product[],
+    total: number, 
+    skip: number, 
+    limit: number
+}
+
+export const productsService = {
   get: ({ search, ...rest }: ProductDTO) => {
     const params = new URLSearchParams(rest);
 
@@ -35,6 +42,6 @@ export const products = {
       ? `/product/search?q=${search}&${params.toString()}`
       : `/product?${params.toString()}`;
 
-    return clientApi.get<Product[]>(url);
+    return clientApi.get<ProductResponce>(url);
   },
 };

@@ -1,7 +1,7 @@
 import LogoIcon from "@/assets/logo.svg?react";
 import { Link } from "react-router";
-import { UserField } from "@/components/form-fields/user";
-import { PasswordField } from "@/components/form-fields/password";
+import { UserField } from "@/components/form-fields/user-field";
+import { PasswordField } from "@/components/form-fields/password-field";
 import { Checkbox } from "@/components/form-fields/checkbox";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -78,7 +78,7 @@ export function SignInPage() {
 
         <button
           type="submit"
-          className="btn w-full mb-4"
+          className="btn btn-primary btn-lg w-full mb-4"
           disabled={authMutation.isPending}
         >
           Войти

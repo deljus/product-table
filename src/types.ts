@@ -16,4 +16,6 @@ export type Product = {
   stock: number;
   brand: string;
   sku: string;
+  images: string[]
+  category: string
 };

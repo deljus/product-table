@@ -10,6 +10,20 @@
   --color-coral-100: #ebebeb;
   --color-coral-200: #e0e0e0;
   --color-coral-300: #6c6c6c;
+
+
+  --color-primary:  #242EDB;
+  --color-primary-content: #367AFF;
+
+  --color-gray-100: #EBEBEB;
+  --color-gray-200: #E0E0E0;
+  --color-gray-300: #C9C9C9;
+  --color-gray-400: #CACACA;
+  --color-gray-500: #9C9C9C;
+  --color-gray-600: #6C6C6C;
+
+  --color-dark-blue: #3C538E;
+
 }
 
 @layer base {
@@ -20,7 +34,15 @@
 
 @layer components {
   .btn {
-    @apply text-white bg-primary font-semibold text-lg p-4 rounded-xl border border-[#367AFF] cursor-pointer;
+    @apply font-inter border cursor-pointer p-2.5 border-gray-200 rounded-lg text-black font-semibold;
+  }
+
+  .btn-primary {
+    @apply text-white bg-primary border-primary-content hover:bg-primary/90;
+  }
+
+  .btn-lg {
+    @apply font-semibold text-lg p-4 rounded-xl;
   }
 
   .divider {

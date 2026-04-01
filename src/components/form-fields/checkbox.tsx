@@ -14,11 +14,9 @@ export function Checkbox({
              grid place-content-center
              before:content-[''] before:w-4 before:h-4
              before:scale-0 before:transition-transform before:duration-150
-             before:bg-primary
-             before:[clip-path:polygon(14%_44%,0_65%,50%_100%,100%_16%,80%_0%,43%_62%)]
-             checked:before:scale-100 checked:border-primary cursor-pointer"
+             before:bg-dark-blue
+             checked:before:scale-100 checked:border-bg-dark-blue cursor-pointer"
         {...rest}
-        
       />
       <span>{label}</span>
     </label>
