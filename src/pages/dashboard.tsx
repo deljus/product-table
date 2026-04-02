@@ -24,11 +24,13 @@ type Filters = {
 
 const columns: Column<Product>[] = [
   {
+    className: "w-[5%]",
     title: <Checkbox />,
     render: () => <Checkbox />,
   },
   {
     title: "Наименование",
+    className: "w-[45%]",
     render: (item) => (
       <div className="flex flex-row space-x-2 w-full">
         <img src={item.images[0]} className="w-12 h-12 rounded-lg" />
@@ -41,16 +43,19 @@ const columns: Column<Product>[] = [
   },
   {
     title: "Вендор",
+    className: "w-[10%]",
     dataKey: "brand",
     render: ({ brand }) => brand,
   },
   {
     title: "Артикул",
+    className: "w-[10%]",
     dataKey: "sku",
     render: ({ sku }) => sku,
   },
   {
     title: "Оценка",
+    className: "w-[10%]",
     render: ({ rating }) => (
       <div>
         <span className={cn(rating < 3.5 && "text-red-500")}>
@@ -62,12 +67,14 @@ const columns: Column<Product>[] = [
   },
   {
     title: "Цена, ₽",
+    className: "w-[10%]",
     dataKey: "price",
     sortable: true,
     render: ({ price }) => price,
   },
   {
     title: "",
+    className: "w-[10%]",
     render: () => (
       <div className="flex items-center space-x-2">
         <button type="button" className="btn btn-primary rounded-2xl py-0 px-2">

@@ -11,6 +11,7 @@ import { auth } from "@/libs/services";
 import * as TokenStorage from "@/libs/token-storage";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import cn from "classnames";
 
 const validateSchema = yup
   .object({
@@ -78,7 +79,10 @@ export function SignInPage() {
 
         <button
           type="submit"
-          className="btn btn-primary btn-lg w-full mb-4"
+          className={cn(
+            "btn btn-primary btn-lg w-full mb-4",
+            authMutation.isPending && "animate-pulse",
+          )}
           disabled={authMutation.isPending}
         >
           Войти
